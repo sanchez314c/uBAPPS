@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+  <!-- CPU chip body -->
+  <rect x="5" y="5" width="12" height="12" rx="1" fill="#FFA500" stroke="#E69500" stroke-width="0.5"/>
+
+  <!-- CPU die (inner square) -->
+  <rect x="7" y="7" width="8" height="8" rx="0.5" fill="#E69500"/>
+
+  <!-- Top pins -->
+  <rect x="7" y="2" width="2" height="3" fill="#FFA500"/>
+  <rect x="10" y="2" width="2" height="3" fill="#FFA500"/>
+  <rect x="13" y="2" width="2" height="3" fill="#FFA500"/>
+
+  <!-- Bottom pins -->
+  <rect x="7" y="17" width="2" height="3" fill="#FFA500"/>
+  <rect x="10" y="17" width="2" height="3" fill="#FFA500"/>
+  <rect x="13" y="17" width="2" height="3" fill="#FFA500"/>
+
+  <!-- Left pins -->
+  <rect x="2" y="7" width="3" height="2" fill="#FFA500"/>
+  <rect x="2" y="10" width="3" height="2" fill="#FFA500"/>
+  <rect x="2" y="13" width="3" height="2" fill="#FFA500"/>
+
+  <!-- Right pins -->
+  <rect x="17" y="7" width="3" height="2" fill="#FFA500"/>
+  <rect x="17" y="10" width="3" height="2" fill="#FFA500"/>
+  <rect x="17" y="13" width="3" height="2" fill="#FFA500"/>
+</svg>

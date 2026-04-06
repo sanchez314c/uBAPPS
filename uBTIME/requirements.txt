@@ -1,0 +1,21 @@
+# uBTIME Dependencies
+# Note: These are system packages, install via apt
+
+# Required system packages (install with apt):
+# sudo apt install python3-gi python3-gi-cairo gir1.2-gtk-3.0 gir1.2-ayatanaappindicator3-0.1
+
+# Python requirements:
+# - Python 3.9+ (for zoneinfo module)
+# - PyGObject (python3-gi)
+# - GTK 3.0 bindings
+
+# The application uses these Python standard library modules:
+# - zoneinfo (Python 3.9+)
+# - datetime
+# - json
+# - pathlib
+# - subprocess
+# - dataclasses
+
+# For Python < 3.9, install:
+# pip install backports.zoneinfo

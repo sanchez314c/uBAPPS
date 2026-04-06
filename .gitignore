@@ -1,0 +1,54 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS metadata
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+.Spotlight-V100
+
+# Build output
+dist/
+build/
+out/
+
+# Logs
+*.log
+
+# Temp files
+*.tmp
+.cache/
+
+# Config (user-specific)
+config.json
+
+# Secrets
+.env
+.env.local
+.env.*.local
+
+# Testing
+coverage/
+
+# Archive & Legacy
+archive/
+legacy/
+
+# MCP
+.serena/cache/
