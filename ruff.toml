@@ -1,0 +1,10 @@
+[lint.per-file-ignores]
+# All apps must call gi.require_version() before importing from gi.repository.
+# This is a mandatory GTK/GI pattern, not a style issue.
+"uBCPU/ubcpu.py" = ["E402"]
+"uBDISK/ubdisk.py" = ["E402"]
+"uBNET/ubnet.py" = ["E402"]
+"uBRES/ubres.py" = ["E402"]
+"uBTEMP/ubtemp.py" = ["E402"]
+"uBTIME/ubtime.py" = ["E402"]
+"uBWEAT/ubweat.py" = ["E402"]
