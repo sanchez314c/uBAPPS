@@ -81,18 +81,21 @@ class Config:
         return cls()
 
     def save(self, path: Path):
-        path.parent.mkdir(parents=True, exist_ok=True)
-        with open(path, "w") as f:
-            json.dump(
-                {
-                    "warning_threshold": self.warning_threshold,
-                    "critical_threshold": self.critical_threshold,
-                    "show_notifications": self.show_notifications,
-                    "update_interval_ms": self.update_interval_ms,
-                },
-                f,
-                indent=2,
-            )
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with open(path, "w") as f:
+                json.dump(
+                    {
+                        "warning_threshold": self.warning_threshold,
+                        "critical_threshold": self.critical_threshold,
+                        "show_notifications": self.show_notifications,
+                        "update_interval_ms": self.update_interval_ms,
+                    },
+                    f,
+                    indent=2,
+                )
+        except (OSError, IOError):
+            pass
 
 
 class CPUMonitor:
@@ -195,7 +198,7 @@ class uBCPU:
         self.config = Config.load(self.CONFIG_FILE)
         self.cpu_monitor = CPUMonitor()
         self.cores: List[CPUCore] = []
-        self.core_labels: Dict[int, Gtk.Label] = {}
+        self.core_labels: Dict[object, Gtk.Label] = {}
         self.total_usage = 0.0
         self.menu = None
         self.current_icon = None

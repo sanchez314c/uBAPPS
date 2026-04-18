@@ -92,19 +92,22 @@ class Config:
         return cls()
 
     def save(self, path: Path):
-        path.parent.mkdir(parents=True, exist_ok=True)
-        with open(path, "w") as f:
-            json.dump(
-                {
-                    "use_fahrenheit": self.use_fahrenheit,
-                    "custom_names": self.custom_names,
-                    "warning_threshold": self.warning_threshold,
-                    "critical_threshold": self.critical_threshold,
-                    "show_notifications": self.show_notifications,
-                },
-                f,
-                indent=2,
-            )
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with open(path, "w") as f:
+                json.dump(
+                    {
+                        "use_fahrenheit": self.use_fahrenheit,
+                        "custom_names": self.custom_names,
+                        "warning_threshold": self.warning_threshold,
+                        "critical_threshold": self.critical_threshold,
+                        "show_notifications": self.show_notifications,
+                    },
+                    f,
+                    indent=2,
+                )
+        except (OSError, IOError):
+            pass
 
 
 class SensorManager:

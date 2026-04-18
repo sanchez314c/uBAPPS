@@ -81,19 +81,22 @@ class Config:
         return cls()
 
     def save(self, path: Path):
-        path.parent.mkdir(parents=True, exist_ok=True)
-        with open(path, "w") as f:
-            json.dump(
-                {
-                    "warning_threshold_mb": self.warning_threshold_mb,
-                    "critical_threshold_mb": self.critical_threshold_mb,
-                    "update_interval_ms": self.update_interval_ms,
-                    "show_loopback": self.show_loopback,
-                    "show_virtual": self.show_virtual,
-                },
-                f,
-                indent=2,
-            )
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with open(path, "w") as f:
+                json.dump(
+                    {
+                        "warning_threshold_mb": self.warning_threshold_mb,
+                        "critical_threshold_mb": self.critical_threshold_mb,
+                        "update_interval_ms": self.update_interval_ms,
+                        "show_loopback": self.show_loopback,
+                        "show_virtual": self.show_virtual,
+                    },
+                    f,
+                    indent=2,
+                )
+        except (OSError, IOError):
+            pass
 
 
 class NetworkMonitor:
@@ -488,10 +491,17 @@ class uBNET:
             # Update session totals
             total_label = self.interface_labels.get(f"{iface.interface}_total")
             if total_label:
-                total_label.set_markup(
-                    f"<span font_family='monospace'>{iface.interface:<12}</span>  "
-                    f"▼ {format_bytes(iface.rx_bytes)}  ▲ {format_bytes(iface.tx_bytes)}"
-                )
+                if iface.is_bridge_member:
+                    total_label.set_markup(
+                        f"<span font_family='monospace' foreground='#888888'>{iface.interface:<12}</span>  "
+                        f"<span foreground='#888888'>▼ {format_bytes(iface.rx_bytes)}  ▲ {format_bytes(iface.tx_bytes)}</span>"
+                        f"  <span foreground='#666666' size='small'>(bridged)</span>"
+                    )
+                else:
+                    total_label.set_markup(
+                        f"<span font_family='monospace'>{iface.interface:<12}</span>  "
+                        f"▼ {format_bytes(iface.rx_bytes)}  ▲ {format_bytes(iface.tx_bytes)}"
+                    )
 
         # Update tray label and icon
         self.update_tray_label()

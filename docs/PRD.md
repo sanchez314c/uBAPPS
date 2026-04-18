@@ -218,9 +218,9 @@ Menu is only rebuilt when the structure changes (new sensors, new interfaces). T
 | Metric | Value |
 |--------|-------|
 | Total apps | 7 |
-| Total Python LOC | ~3,359 |
-| Largest app | uBTEMP (695 LOC) |
-| Smallest app | uBRES (334 LOC) |
+| Total Python LOC | ~3,476 |
+| Largest app | uBTEMP (733 LOC) |
+| Smallest app | uBRES (337 LOC) |
 | Shared code between apps | 0 LOC (fully independent) |
 | External API calls | 1 (uBWEAT -> wttr.in) |
 | Test coverage | 0% (tests directory empty, to be addressed) |
@@ -239,4 +239,4 @@ Menu is only rebuilt when the structure changes (new sensors, new interfaces). T
 
 ---
 
-*Generated: 2026-03-28 | Pipeline: repoprdgen*
+*Generated: 2026-03-28 | Updated: 2026-04-17 | Pipeline: repoprdgen*

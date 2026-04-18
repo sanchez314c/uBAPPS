@@ -52,10 +52,14 @@ class ResolutionManager:
 
         try:
             output = subprocess.check_output(
-                ["xrandr", "--query"], stderr=subprocess.STDOUT, universal_newlines=True
+                ["xrandr", "--query"], stderr=subprocess.STDOUT, universal_newlines=True,
+                timeout=5
             )
         except subprocess.CalledProcessError as e:
             print(f"Error running xrandr: {e}")
+            return displays
+        except subprocess.TimeoutExpired:
+            print("Error: xrandr query timed out")
             return displays
         except FileNotFoundError:
             print("xrandr not found. Please install x11-xserver-utils.")
@@ -131,10 +135,11 @@ class ResolutionManager:
             cmd.extend(["--rate", str(refresh)])
 
         try:
-            subprocess.check_call(cmd, stderr=subprocess.STDOUT)
+            subprocess.run(cmd, capture_output=True, check=True, timeout=5)
             return True
         except subprocess.CalledProcessError as e:
-            print(f"Error setting resolution: {e}")
+            stderr = e.stderr.decode(errors="replace") if e.stderr else "unknown error"
+            print(f"Error setting resolution: {stderr}")
             return False
 
 
@@ -323,8 +328,8 @@ def main():
     """Entry point."""
     # Check for required dependencies
     try:
-        subprocess.check_output(["which", "xrandr"], stderr=subprocess.DEVNULL)
-    except (subprocess.CalledProcessError, FileNotFoundError):
+        subprocess.check_output(["which", "xrandr"], stderr=subprocess.DEVNULL, timeout=5)
+    except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
         print("Error: xrandr is required but not installed.")
         print("Install it with: sudo apt install x11-xserver-utils")
         sys.exit(1)

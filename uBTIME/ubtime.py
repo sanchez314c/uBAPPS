@@ -258,7 +258,7 @@ class UBTimeApp:
                     (t for t in self.all_timezones if t.zone_id == zone_id), None
                 )
                 if tz_info:
-                    self._add_timezone_item(tz_info, is_favorite=True)
+                    self._add_timezone_item(tz_info)
 
             self.menu.append(Gtk.SeparatorMenuItem())
 
@@ -325,7 +325,6 @@ class UBTimeApp:
     def _add_timezone_item(
         self,
         tz_info: TimezoneInfo,
-        is_favorite: bool = False,
         parent_menu: Gtk.Menu = None,
     ):
         """Add a timezone menu item."""

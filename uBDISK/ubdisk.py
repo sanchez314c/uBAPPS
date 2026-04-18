@@ -76,18 +76,21 @@ class Config:
         return cls()
 
     def save(self, path: Path):
-        path.parent.mkdir(parents=True, exist_ok=True)
-        with open(path, "w") as f:
-            json.dump(
-                {
-                    "warning_threshold_mb": self.warning_threshold_mb,
-                    "critical_threshold_mb": self.critical_threshold_mb,
-                    "update_interval_ms": self.update_interval_ms,
-                    "show_all_disks": self.show_all_disks,
-                },
-                f,
-                indent=2,
-            )
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with open(path, "w") as f:
+                json.dump(
+                    {
+                        "warning_threshold_mb": self.warning_threshold_mb,
+                        "critical_threshold_mb": self.critical_threshold_mb,
+                        "update_interval_ms": self.update_interval_ms,
+                        "show_all_disks": self.show_all_disks,
+                    },
+                    f,
+                    indent=2,
+                )
+        except (OSError, IOError):
+            pass
 
 
 class DiskMonitor:

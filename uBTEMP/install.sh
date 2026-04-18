@@ -91,6 +91,7 @@ EOF
 if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
     echo ""
     echo "NOTE: Add ~/.local/bin to your PATH by adding this to ~/.bashrc:"
+    # shellcheck disable=SC2016  # Intentional: literal shell snippet for user to copy
     echo '  export PATH="$HOME/.local/bin:$PATH"'
     echo ""
 fi
