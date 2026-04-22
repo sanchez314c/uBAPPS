@@ -578,7 +578,7 @@ class uBTEMP:
                 )
 
         # Update tray label and icon
-        self.indicator.set_label(self.format_temp(self.highest_temp), "")
+        self.indicator.set_label(self.format_temp(self.highest_temp), "999.9°F")
         self.update_icon()
 
     def sensors_changed(self) -> bool:
@@ -659,7 +659,7 @@ class uBTEMP:
         # Store current sensor IDs
         self.last_sensor_ids = [s.unique_id for s in self.sensors]
 
-        self.indicator.set_label(self.format_temp(self.highest_temp), "")
+        self.indicator.set_label(self.format_temp(self.highest_temp), "999.9°F")
 
     def on_sensor_click(self, widget, event):
         if event.button == 3:

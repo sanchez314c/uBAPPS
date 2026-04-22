@@ -104,6 +104,14 @@ class Config:
                     self.location = data.get("location", "")
                     self.refresh_minutes = data.get("refresh_minutes", 10)
                     self.show_condition = data.get("show_condition", True)
+
+                    # Migration: location must be 5-digit US ZIP or empty (auto-detect).
+                    # Legacy city-name values are cleared so next fetch uses IP auto-detect.
+                    if self.location and not (
+                        self.location.isdigit() and len(self.location) == 5
+                    ):
+                        self.location = ""
+                        self.save()
         except (json.JSONDecodeError, OSError, IOError, KeyError):
             pass
 
@@ -215,7 +223,7 @@ class UBWeatApp:
         )
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
         self.indicator.set_title(self.APP_NAME)
-        self.indicator.set_label("--°", "")
+        self.indicator.set_label("--°", "999°F")
 
         self.build_menu()
 
@@ -379,11 +387,11 @@ class UBWeatApp:
     def update_display(self):
         """Update all weather displays."""
         if not self.weather:
-            self.indicator.set_label("--°", "")
+            self.indicator.set_label("--°", "999°F")
             return
 
         # Update tray
-        self.indicator.set_label(self.get_temp_display(), "")
+        self.indicator.set_label(self.get_temp_display(), "999°F")
 
         # Update icon
         icon_name = self.get_icon_for_condition(self.weather.condition)
@@ -454,36 +462,63 @@ class UBWeatApp:
         self.build_menu()
 
     def set_location_dialog(self, widget):
-        """Show dialog to set location."""
+        """Show dialog to set location — US ZIP code or leave empty for auto-detect by IP."""
         dialog = Gtk.Dialog(title="Set Location", flags=Gtk.DialogFlags.MODAL)
         dialog.add_buttons(
             Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK
         )
-        dialog.set_default_size(300, 100)
+        dialog.set_default_size(340, 140)
 
         content = dialog.get_content_area()
         content.set_spacing(10)
-        content.set_margin_start(10)
-        content.set_margin_end(10)
-        content.set_margin_top(10)
-        content.set_margin_bottom(10)
+        content.set_margin_start(12)
+        content.set_margin_end(12)
+        content.set_margin_top(12)
+        content.set_margin_bottom(12)
 
-        label = Gtk.Label(label="Enter city name (leave empty for auto-detect):")
+        label = Gtk.Label(label="Enter US ZIP code (leave empty for auto-detect by IP):")
         label.set_halign(Gtk.Align.START)
+        label.set_line_wrap(True)
         content.add(label)
 
         entry = Gtk.Entry()
         entry.set_text(self.config.location)
-        entry.set_placeholder_text("e.g., New York, London, Tokyo")
+        entry.set_placeholder_text("e.g., 28117")
+        entry.set_max_length(5)
+        entry.set_width_chars(10)
         content.add(entry)
+
+        hint = Gtk.Label()
+        hint.set_markup(
+            "<small>Empty = auto-detect via IP geolocation. "
+            "ZIP is most precise for US locations.</small>"
+        )
+        hint.set_halign(Gtk.Align.START)
+        hint.set_line_wrap(True)
+        content.add(hint)
 
         dialog.show_all()
         response = dialog.run()
 
         if response == Gtk.ResponseType.OK:
-            self.config.location = entry.get_text().strip()
-            self.config.save()
-            self.fetch_weather_async()
+            value = entry.get_text().strip()
+            if value and not (value.isdigit() and len(value) == 5):
+                err = Gtk.MessageDialog(
+                    transient_for=dialog,
+                    flags=0,
+                    message_type=Gtk.MessageType.ERROR,
+                    buttons=Gtk.ButtonsType.OK,
+                    text="Invalid ZIP code",
+                )
+                err.format_secondary_text(
+                    "Enter exactly 5 digits (e.g., 28117), or leave blank for auto-detect."
+                )
+                err.run()
+                err.destroy()
+            else:
+                self.config.location = value
+                self.config.save()
+                self.fetch_weather_async()
 
         dialog.destroy()
 

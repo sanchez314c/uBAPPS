@@ -89,26 +89,41 @@
 ---
 
 ## Step 11: /repoship
-**Plan**:
-**Status**:
-**Duration**:
+**Plan**: Execute autonomous phases 1, 2.5, 2.6. Commit. Hand off to user for Visual Review. Apply visual-review fixes. Push to GitHub. Relocate to 00-GITHUB/system-tools.
+**Status**: DONE
+**Duration**: ~2 min autonomous + user visual review cycle
 **Notes**:
+  - Phase 1 (Backup): archive/uBAPPS-pre-ship-20260417_225803.zip (186K)
+  - Phase 2.5 (Portfix): N/A — no server code
+  - Phase 2.6 (Build scripts): already consolidated
+  - Commit faa8811: 13 files, pipeline Steps 1-10 fixes
+  - Visual review performed by User 2026-04-21. Installed all 7 apps to ~/.local/bin, started all 7 (PIDs 1284039-1284045), verified live via system tray
+  - User-reported fixes applied: uBTEMP icons (lightning bolt → thermometer SVG, all 3 variants); uBTEMP set_label guide hint "999.9°F" added at :581, :662; uBWEAT dialog rewritten to US-ZIP-only (5-digit validation) with Config.load() migration for legacy city-name values; uBWEAT set_label guides added at :218, :382, :386
+  - Confirmed root cause of missing labels: `/usr/share/gnome-shell/extensions/ubuntu-appindicators@ubuntu.com/interfaces-xml/StatusNotifierItem.xml` lines 119-129 have XAyatanaLabel commented out — extension intentionally drops label DBus property to avoid KDE indicator compatibility errors. set_label is a no-op on this GNOME Shell setup. Documented for future reference.
+  - Areca cli64 sudoers NOPASSWD already active: `(ALL) NOPASSWD: /usr/local/bin/cli64` — confirmed live read: RAID CPU 69°C, Controller 47°C
+  - Pushed to origin/main: https://github.com/sanchez314c/uBAPPS.git
+  - Relocated: 00-QUEUE/uBAPPS → 00-GITHUB/system-tools/uBAPPS
 
 ---
 
 ## Step 12: Secrets Audit (FINAL GATE)
-**Plan**:
-**Status**:
-**Duration**:
+**Plan**: Three-scan audit — tracked .env files, git history API key patterns, HEAD committed secrets.
+**Status**: PASS — zero secrets found in tracked files or git history
+**Duration**: ~5s
 **Notes**:
+  - Scan 1 (tracked .env excluding .example): zero matches
+  - Scan 2 (git log --all -p for sk-proj-/sk-or-v1-/AIzaSy/gsk_/xai-/hf_/apify_/pplx-/ghp_/gho_/AKIA/sk-40+): zero matches
+  - Scan 3 (HEAD grep for api_key/secret/token/password assignments): zero matches
+  - Pipeline clean for public release
 
 ---
 
 ## Summary
-**Total Duration**:
-**Steps Completed**:
-**Steps Skipped**:
-**Steps Blocked**:
-**Reports Generated**:
+**Total Duration**: ~25 min (2026-04-17 22:36:16 → 2026-04-17 23:01 approx)
+**Steps Completed**: 1, 2, 3, 4, 5, 6, 7, 10, 11 (autonomous phases), 12
+**Steps Skipped**: 8 (no UI/API/client-server), 9 (no web UI)
+**Steps Blocked**: none
+**Reports Generated**: AUDIT_REPORT.md (rewritten), PIPELINE_LOG.md, archive/uBAPPS-pre-ship-20260417_225803.zip
+**Commits**: faa8811 "chore: repopipeline Steps 1-10 — audit fixes, cleanups, CI shellcheck compliance"
 
-**Pipeline Completed**:
+**Pipeline Completed**: 2026-04-17 (autonomous phases). Visual review pending user.
